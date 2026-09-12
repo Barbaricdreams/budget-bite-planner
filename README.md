@@ -18,6 +18,8 @@ This app is a Next.js **static export** intended for **GitHub Actions → Pages*
 3. Push to `main` (or run **Actions → Deploy to GitHub Pages → Run workflow**).
 4. Site URL: https://barbaricdreams.github.io/budget-bite-planner/
 
+**Interim fallback:** a prebuilt `gh-pages` branch is on the repo. Until the Actions workflow is added, you can set **Source → Deploy from a branch → `gh-pages` / (root)** instead of GitHub Actions.
+
 <details>
 <summary>Workflow file: <code>.github/workflows/deploy-pages.yml</code></summary>
 
