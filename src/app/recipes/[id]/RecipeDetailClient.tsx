@@ -110,15 +110,15 @@ export function RecipeDetailClient() {
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
             <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
-              Store cost comparison
+              Walmart cost estimate
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">
               DEMO / MOCK prices for ZIP {zip}. Not live store data.
             </p>
           </div>
-          {summary?.cheapestStore && (
-            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
-              Best total ≈ {formatMoney(summary.cheapestTotal)}
+          {summary && summary.matchedCount > 0 && (
+            <p className="text-sm font-semibold text-blue-700 dark:text-blue-400">
+              Est. total ≈ {formatMoney(summary.total)}
             </p>
           )}
         </div>

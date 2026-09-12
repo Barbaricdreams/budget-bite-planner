@@ -27,15 +27,16 @@ export default function HomePage() {
     <div className="space-y-6">
       <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 p-6 text-white shadow-lg sm:p-8 dark:from-emerald-800 dark:via-teal-800 dark:to-cyan-900">
         <p className="text-sm font-semibold uppercase tracking-widest text-emerald-100">
-          Grocery planner
+          Walmart grocery planner
         </p>
         <h1 className="mt-2 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl">
           Stretch every dollar with budget bites
         </h1>
         <p className="mt-3 max-w-2xl text-sm text-emerald-50 sm:text-base">
-          Browse {RECIPES.length} thrifty recipes, compare{" "}
-          <strong>DEMO</strong> prices at Dollar Tree, Dollar General, and
-          Walmart, then build a shopping list for your ZIP.
+          Browse {RECIPES.length} thrifty recipes, estimate{" "}
+          <strong>DEMO</strong> Walmart prices for your ZIP, then build a
+          shopping list. Live Affiliate/SerpApi pricing can replace the mock
+          catalog later.
         </p>
       </section>
 

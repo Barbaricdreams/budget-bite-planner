@@ -1,2 +1,2 @@
 export type { StoreAdapter } from "./types";
-export { MockStoreAdapter, createMockAdapters } from "./mock";
+export { MockStoreAdapter, getWalmartAdapter, createMockAdapters } from "./mock";

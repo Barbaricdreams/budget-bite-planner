@@ -66,14 +66,18 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
         </div>
 
         <div className="mt-auto space-y-2 border-t border-slate-100 pt-3 dark:border-slate-800">
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between gap-2 text-sm">
             <span className="text-slate-500 dark:text-slate-400">
               {recipe.servings} servings · DEMO
             </span>
-            {summary?.cheapestStore ? (
-              <span className="flex items-center gap-2 font-semibold text-emerald-700 dark:text-emerald-400">
-                from {formatMoney(summary.cheapestTotal)}
-                <StoreBadge storeId={summary.cheapestStore} />
+            {summary && summary.matchedCount > 0 ? (
+              <span className="flex items-center gap-2 font-semibold text-blue-700 dark:text-blue-400">
+                {formatMoney(summary.total)}
+                <StoreBadge />
+              </span>
+            ) : summary ? (
+              <span className="text-xs text-amber-600 dark:text-amber-400">
+                Prices unavailable
               </span>
             ) : (
               <span className="text-xs text-slate-400">Pricing…</span>

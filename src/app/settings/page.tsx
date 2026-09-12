@@ -16,8 +16,8 @@ export default function SettingsPage() {
           Settings
         </h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Location nudges DEMO catalog prices slightly for realism. No network
-          calls are made.
+          Location nudges DEMO Walmart catalog prices slightly for realism. No
+          network calls are made.
         </p>
       </div>
 
@@ -69,7 +69,7 @@ export default function SettingsPage() {
         </label>
         <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
           Mocked location setting — used only to seed deterministic price
-          variation in MockStoreAdapter.
+          variation in the Walmart mock adapter.
         </p>
         <div className="mt-4 flex gap-2">
           <input
@@ -96,21 +96,24 @@ export default function SettingsPage() {
       </section>
 
       <section className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-sm text-amber-950 dark:border-amber-800/60 dark:bg-amber-950/70 dark:text-amber-100">
-        <h2 className="font-bold">About DEMO pricing</h2>
+        <h2 className="font-bold">About DEMO Walmart pricing</h2>
         <p className="mt-2 leading-relaxed">
-          There are no official public consumer APIs for Dollar Tree or Dollar
-          General. This app uses{" "}
+          Prices come from a seeded{" "}
           <code className="rounded bg-white px-1 dark:bg-slate-900/80">
             MockStoreAdapter
           </code>{" "}
-          with seeded catalogs. Labels in the UI mark all figures as DEMO/MOCK.
-          To go live later, implement the{" "}
+          for Walmart only. Nothing hits live store endpoints. When you have an
+          Affiliate or SerpApi key, implement{" "}
           <code className="rounded bg-white px-1 dark:bg-slate-900/80">
             StoreAdapter
           </code>{" "}
-          interface with a real data source and register it in{" "}
+          in{" "}
           <code className="rounded bg-white px-1 dark:bg-slate-900/80">
             src/lib/adapters/
+          </code>{" "}
+          and swap it in via{" "}
+          <code className="rounded bg-white px-1 dark:bg-slate-900/80">
+            getWalmartAdapter()
           </code>
           .
         </p>

@@ -1,10 +1,10 @@
 # Budget Bite Planner
 
-Plan thrifty meals and compare **DEMO / MOCK** grocery costs across **Dollar Tree**, **Dollar General**, and **Walmart**.
+Plan thrifty meals with **DEMO / MOCK Walmart** grocery cost estimates.
 
 **Live site:** [https://barbaricdreams.github.io/budget-bite-planner/](https://barbaricdreams.github.io/budget-bite-planner/)
 
-> **Important:** Prices are fictional seeded data for UX demos. There are no official public consumer APIs for Dollar Tree / Dollar General. Nothing in this app hits live store endpoints.
+> **Important:** Prices are fictional seeded data for UX demos. Nothing hits live Walmart endpoints until Affiliate/SerpApi (or similar) is wired.
 
 ## Deploy (GitHub Pages)
 
@@ -92,10 +92,11 @@ npx serve out
 ## Features
 
 - **Recipe browser** — ~16 budget recipes with tags, servings, cook time, difficulty, and emoji/gradient “images”
-- **Meal detail** — ingredients, steps, estimated totals, and per-ingredient price comparison
-- **Multi-store comparison** — Dollar Tree, Dollar General, Walmart + cheapest-store highlight
-- **Shopping list** — aggregate ingredients across selected meals and compare basket totals
+- **Meal detail** — ingredients, steps, estimated Walmart total, and per-ingredient DEMO price / not-found
+- **Walmart pricing** — mock catalog with clear DEMO labels (ready to swap for live Affiliate/SerpApi)
+- **Shopping list** — aggregate ingredients across selected meals into a Walmart basket total
 - **ZIP setting** — mocked location that slightly nudges DEMO prices (deterministic)
+- **Dark mode** — class-based theme toggle with system preference on first visit
 
 ## Quick start
 
@@ -110,28 +111,28 @@ Open [http://localhost:3000](http://localhost:3000).
 npm run build   # static export → out/
 ```
 
-No API keys or secrets are required.
+No API keys or secrets are required for the mock catalog.
 
 ## Tech
 
 - Next.js (App Router) + TypeScript + Tailwind CSS
 - Static export for GitHub Pages (`output: "export"`, `trailingSlash: true`)
-- Client-side pricing against in-memory mock catalogs
-- Preferences (ZIP, shopping list) stored in `localStorage`
+- Client-side pricing against an in-memory mock Walmart catalog
+- Preferences (ZIP, shopping list, theme) stored in `localStorage`
 
 ## Architecture: mock vs live
 
 ```
 StoreAdapter (interface)
-  └── MockStoreAdapter   ← used today (seeded catalogs)
-  └── FutureLiveAdapter  ← implement when you have a data source
+  └── MockStoreAdapter   ← used today (seeded Walmart catalog)
+  └── FutureLiveAdapter  ← Affiliate / SerpApi when keyed
 ```
 
 | Piece | Path | Role |
 | --- | --- | --- |
 | Adapter interface | `src/lib/adapters/types.ts` | `getCatalog`, `findProduct` |
-| Mock adapters | `src/lib/adapters/mock.ts` | One adapter instance per store id |
-| Seeded catalogs | `src/data/catalogs.ts` | Realistic DEMO products & prices |
+| Mock Walmart adapter | `src/lib/adapters/mock.ts` | Seeded DEMO prices |
+| Seeded catalog | `src/data/catalogs.ts` | Realistic DEMO products & prices |
 | Recipes | `src/data/recipes.ts` | Meal definitions |
 | Fuzzy matching | `src/lib/fuzzy.ts` | Ingredient → product matching |
 | Pricing engine | `src/lib/pricing.ts` | Per-ingredient & meal / list totals |
@@ -139,7 +140,7 @@ StoreAdapter (interface)
 ### Extending adapters
 
 1. Implement `StoreAdapter` in `src/lib/adapters/` (set `isMock: false` for live sources).
-2. Register the adapter in `createMockAdapters()` (or rename to a registry) inside `mock.ts` / a new `registry.ts`.
+2. Register it from `getWalmartAdapter()` in `mock.ts` (or a new `registry.ts`).
 3. Keep UI DEMO banners until live data is verified.
 
 ZIP is passed into `getCatalog(zip)` so a live adapter can regionalize assortment/pricing.
@@ -149,9 +150,9 @@ ZIP is passed into `getCatalog(zip)` so a live adapter can regionalize assortmen
 | Route | Description |
 | --- | --- |
 | `/` | Recipe browser with search & tag filter |
-| `/recipes/[id]` | Meal detail + 3-store cost comparison |
-| `/shopping-list` | Multi-meal basket & store totals |
-| `/settings` | ZIP / location (mocked) |
+| `/recipes/[id]` | Meal detail + Walmart DEMO cost estimate |
+| `/shopping-list` | Multi-meal Walmart basket total |
+| `/settings` | ZIP / location + appearance (mocked pricing) |
 
 ## License
 

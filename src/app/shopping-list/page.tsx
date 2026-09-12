@@ -6,8 +6,8 @@ import { StoreBadge } from "@/components/StoreBadge";
 import { useApp } from "@/context/AppContext";
 import { getRecipeById } from "@/data/recipes";
 import { buildShoppingList, formatMoney } from "@/lib/pricing";
-import { STORE_IDS, getStore } from "@/lib/stores";
-import type { ShoppingListItem, StoreId } from "@/lib/types";
+import { WALMART } from "@/lib/stores";
+import type { ShoppingListItem } from "@/lib/types";
 
 export default function ShoppingListPage() {
   const { zip, selectedRecipeIds, removeRecipe, clearList, toggleRecipe } =
@@ -36,42 +36,21 @@ export default function ShoppingListPage() {
     };
   }, [recipes, zip]);
 
-  const storeTotals = useMemo(() => {
-    const totals: Record<StoreId, { total: number; matched: number }> = {
-      "dollar-tree": { total: 0, matched: 0 },
-      "dollar-general": { total: 0, matched: 0 },
-      walmart: { total: 0, matched: 0 },
-    };
-    if (!items) return totals;
+  const basket = useMemo(() => {
+    let total = 0;
+    let matched = 0;
+    let missing = 0;
+    if (!items) return { total: 0, matched: 0, missing: 0 };
     for (const item of items) {
-      for (const id of STORE_IDS) {
-        if (item.byStore[id].matched) {
-          totals[id].total += item.byStore[id].lineTotal;
-          totals[id].matched += 1;
-        }
+      if (item.matched) {
+        total += item.lineTotal;
+        matched += 1;
+      } else {
+        missing += 1;
       }
     }
-    for (const id of STORE_IDS) {
-      totals[id].total = Math.round(totals[id].total * 100) / 100;
-    }
-    return totals;
+    return { total: Math.round(total * 100) / 100, matched, missing };
   }, [items]);
-
-  const cheapestStore = useMemo(() => {
-    let best: StoreId | null = null;
-    let bestTotal = Infinity;
-    let bestMatched = -1;
-    for (const id of STORE_IDS) {
-      const { total, matched } = storeTotals[id];
-      if (matched === 0) continue;
-      if (matched > bestMatched || (matched === bestMatched && total < bestTotal)) {
-        best = id;
-        bestTotal = total;
-        bestMatched = matched;
-      }
-    }
-    return best;
-  }, [storeTotals]);
 
   return (
     <div className="space-y-6">
@@ -81,7 +60,7 @@ export default function ShoppingListPage() {
             Shopping list
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Aggregated ingredients for selected meals · ZIP {zip} ·{" "}
+            Walmart basket for selected meals · ZIP {zip} ·{" "}
             <span className="font-semibold text-amber-700 dark:text-amber-400">
               DEMO prices
             </span>
@@ -141,36 +120,25 @@ export default function ShoppingListPage() {
             </ul>
           </section>
 
-          <section className="grid gap-3 sm:grid-cols-3">
-            {STORE_IDS.map((id) => {
-              const row = storeTotals[id];
-              const isBest = cheapestStore === id;
-              return (
-                <div
-                  key={id}
-                  className={`rounded-2xl border p-4 ${
-                    isBest
-                      ? "border-emerald-400 bg-emerald-50 ring-2 ring-emerald-200 dark:border-emerald-500 dark:bg-emerald-950/60 dark:ring-emerald-800"
-                      : "border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
-                  }`}
-                >
-                  <div className="mb-2 flex items-center justify-between">
-                    <StoreBadge storeId={id} />
-                    {isBest && (
-                      <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400">
-                        Cheapest basket
-                      </span>
-                    )}
-                  </div>
-                  <div className={`text-2xl font-bold ${getStore(id).accent}`}>
-                    {row.matched > 0 ? formatMoney(row.total) : "—"}
-                  </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {row.matched} items priced · DEMO
-                  </p>
-                </div>
-              );
-            })}
+          <section className="rounded-2xl border border-blue-200 bg-blue-50/80 p-5 shadow-sm dark:border-blue-800/60 dark:bg-blue-950/40">
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+              <StoreBadge size="md" />
+              <span className="text-[10px] font-bold uppercase tracking-wide text-amber-700 dark:text-amber-400">
+                DEMO basket total
+              </span>
+            </div>
+            <div className={`text-3xl font-bold ${WALMART.accent}`}>
+              {basket.matched > 0 ? formatMoney(basket.total) : "—"}
+            </div>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              {basket.matched} item{basket.matched === 1 ? "" : "s"} priced
+              {basket.missing > 0 && (
+                <span className="text-amber-700 dark:text-amber-400">
+                  {" "}
+                  · {basket.missing} not found
+                </span>
+              )}
+            </p>
           </section>
 
           {!items ? (
@@ -184,12 +152,8 @@ export default function ShoppingListPage() {
                   <tr>
                     <th className="px-4 py-3">Item</th>
                     <th className="px-3 py-3">Qty</th>
-                    {STORE_IDS.map((id) => (
-                      <th key={id} className="px-3 py-3">
-                        {getStore(id).shortName}
-                      </th>
-                    ))}
-                    <th className="px-4 py-3">Best</th>
+                    <th className="px-3 py-3">Walmart</th>
+                    <th className="px-4 py-3">Pack</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -210,38 +174,21 @@ export default function ShoppingListPage() {
                       <td className="px-3 py-3 tabular-nums text-slate-600 dark:text-slate-300">
                         {item.totalQuantity} {item.unit}
                       </td>
-                      {STORE_IDS.map((id) => {
-                        const row = item.byStore[id];
-                        return (
-                          <td
-                            key={id}
-                            className={`px-3 py-3 tabular-nums ${
-                              item.cheapestStore === id
-                                ? "font-semibold text-emerald-700 dark:text-emerald-400"
-                                : "text-slate-700 dark:text-slate-300"
-                            }`}
-                          >
-                            {row.matched ? (
-                              <div>
-                                <div>{formatMoney(row.lineTotal)}</div>
-                                <div className="text-[10px] text-slate-400 dark:text-slate-500">
-                                  {row.packsNeeded}× pack
-                                </div>
-                              </div>
-                            ) : (
-                              <span className="text-xs text-amber-600 dark:text-amber-400">
-                                N/A
-                              </span>
-                            )}
-                          </td>
-                        );
-                      })}
-                      <td className="px-4 py-3">
-                        {item.cheapestStore ? (
-                          <StoreBadge storeId={item.cheapestStore} />
+                      <td className="px-3 py-3 tabular-nums">
+                        {item.matched ? (
+                          <span className="font-semibold text-blue-700 dark:text-blue-400">
+                            {formatMoney(item.lineTotal)}
+                          </span>
                         ) : (
-                          "—"
+                          <span className="text-xs font-medium text-amber-600 dark:text-amber-400">
+                            Not found
+                          </span>
                         )}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-slate-500 dark:text-slate-400">
+                        {item.matched
+                          ? `${item.packsNeeded}× ${item.product?.packLabel ?? "pack"}`
+                          : "—"}
                       </td>
                     </tr>
                   ))}
@@ -259,8 +206,7 @@ export default function ShoppingListPage() {
             >
               remove one
             </button>{" "}
-            to refresh the basket. Assortment differs by store (Dollar Tree may
-            lack fresh meat/dairy).
+            to refresh the basket. Prices are MOCK Walmart estimates.
           </p>
         </>
       )}

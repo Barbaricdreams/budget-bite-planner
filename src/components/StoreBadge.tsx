@@ -1,14 +1,11 @@
-import { getStore } from "@/lib/stores";
-import type { StoreId } from "@/lib/types";
+import { WALMART } from "@/lib/stores";
 
 export function StoreBadge({
-  storeId,
   size = "sm",
 }: {
-  storeId: StoreId;
   size?: "sm" | "md";
 }) {
-  const store = getStore(storeId);
+  const store = WALMART;
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full font-semibold text-white ${store.color} ${

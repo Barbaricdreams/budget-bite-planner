@@ -1,19 +1,18 @@
 import { buildCatalog } from "@/data/catalogs";
 import { bestMatchKey, normalizeKey } from "@/lib/fuzzy";
-import type { StoreId, StoreProduct } from "@/lib/types";
+import type { StoreProduct } from "@/lib/types";
 import type { StoreAdapter } from "./types";
 
 /**
- * MockStoreAdapter — seeded DEMO prices. No network calls.
- * Replace with live adapters that implement StoreAdapter when APIs exist.
+ * MockStoreAdapter — seeded DEMO Walmart prices. No network calls.
+ * Swap for a live Affiliate/SerpApi adapter when a key is available.
  */
 export class MockStoreAdapter implements StoreAdapter {
+  readonly storeId = "walmart" as const;
   readonly isMock = true;
 
-  constructor(readonly storeId: StoreId) {}
-
   async getCatalog(zip: string): Promise<StoreProduct[]> {
-    return buildCatalog(this.storeId, zip || "10001");
+    return buildCatalog(zip || "10001");
   }
 
   async findProduct(matchKey: string, zip: string): Promise<StoreProduct | null> {
@@ -29,10 +28,14 @@ export class MockStoreAdapter implements StoreAdapter {
   }
 }
 
-export function createMockAdapters(): Record<StoreId, StoreAdapter> {
-  return {
-    "dollar-tree": new MockStoreAdapter("dollar-tree"),
-    "dollar-general": new MockStoreAdapter("dollar-general"),
-    walmart: new MockStoreAdapter("walmart"),
-  };
+let singleton: MockStoreAdapter | null = null;
+
+export function getWalmartAdapter(): StoreAdapter {
+  if (!singleton) singleton = new MockStoreAdapter();
+  return singleton;
+}
+
+/** @deprecated Prefer getWalmartAdapter(); kept for clarity during migration. */
+export function createMockAdapters(): { walmart: StoreAdapter } {
+  return { walmart: getWalmartAdapter() };
 }

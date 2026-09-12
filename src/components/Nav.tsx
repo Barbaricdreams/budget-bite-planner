@@ -7,7 +7,7 @@ import { ThemeToggle } from "@/components/ThemeProvider";
 
 const links = [
   { href: "/", label: "Recipes" },
-  { href: "/shopping-list", label: "Shopping List" },
+  { href: "/shopping-list", label: "List" },
   { href: "/settings", label: "Settings" },
 ];
 
@@ -22,23 +22,26 @@ export function Nav() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-emerald-900/10 bg-white/90 backdrop-blur-md dark:border-slate-700/80 dark:bg-slate-900/90">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:gap-3">
-        <Link href="/" className="group flex min-w-0 shrink items-center gap-2">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3">
+        <Link href="/" className="group flex min-w-0 shrink-0 items-center gap-2">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-lg shadow-sm">
             🥗
           </span>
-          <div className="hidden leading-tight min-[380px]:block">
+          <div className="leading-tight">
             <div className="text-sm font-bold tracking-tight text-slate-900 group-hover:text-emerald-700 dark:text-slate-100 dark:group-hover:text-emerald-400">
               Budget Bite Planner
             </div>
             <div className="text-[11px] text-slate-500 dark:text-slate-400">
-              ZIP {zip || "—"}
+              Walmart · ZIP {zip || "—"}
             </div>
           </div>
         </Link>
 
-        <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
-          <nav className="-mx-1 flex max-w-[58vw] items-center gap-1 overflow-x-auto px-1 sm:max-w-none sm:gap-2">
+        <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2 sm:flex-none">
+          <nav
+            className="flex flex-wrap items-center justify-end gap-1.5"
+            aria-label="Primary"
+          >
             {links.map((l) => {
               const href = normalizePath(l.href);
               const active =
@@ -49,7 +52,7 @@ export function Nav() {
                 <Link
                   key={l.href}
                   href={l.href}
-                  className={`relative whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-medium transition sm:px-3 sm:text-sm ${
+                  className={`relative whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition sm:text-sm ${
                     active
                       ? "bg-emerald-600 text-white shadow-sm"
                       : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
@@ -65,7 +68,7 @@ export function Nav() {
               );
             })}
           </nav>
-          <ThemeToggle />
+          <ThemeToggle className="shrink-0" />
         </div>
       </div>
     </header>

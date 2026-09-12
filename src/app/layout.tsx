@@ -11,7 +11,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Budget Bite Planner",
   description:
-    "Plan budget meals and compare DEMO grocery costs across Dollar Tree, Dollar General, and Walmart.",
+    "Plan budget meals with DEMO Walmart grocery cost estimates. Mock prices until Affiliate/SerpApi is wired.",
 };
 
 export const viewport: Viewport = {
@@ -45,7 +45,7 @@ export default function RootLayout({
               {children}
             </main>
             <footer className="mx-auto max-w-6xl px-4 pb-10 pt-4 text-center text-xs text-slate-400 dark:text-slate-500">
-              Budget Bite Planner · Mock store catalogs · No live pricing APIs
+              Budget Bite Planner · Mock Walmart catalog · No live pricing APIs
             </footer>
           </AppProvider>
         </ThemeProvider>

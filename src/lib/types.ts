@@ -1,4 +1,4 @@
-export type StoreId = "dollar-tree" | "dollar-general" | "walmart";
+export type StoreId = "walmart";
 
 export type Difficulty = "easy" | "medium" | "hard";
 
@@ -47,32 +47,18 @@ export interface StoreProduct {
 export interface PricedIngredient {
   ingredient: Ingredient;
   matchKey: string;
-  byStore: Record<
-    StoreId,
-    {
-      product: StoreProduct | null;
-      packsNeeded: number;
-      lineTotal: number;
-      unitPrice: number;
-      matched: boolean;
-    }
-  >;
-  cheapestStore: StoreId | null;
-  cheapestTotal: number;
+  product: StoreProduct | null;
+  packsNeeded: number;
+  lineTotal: number;
+  unitPrice: number;
+  matched: boolean;
 }
 
 export interface MealCostSummary {
   recipeId: string;
-  byStore: Record<
-    StoreId,
-    {
-      total: number;
-      matchedCount: number;
-      missingCount: number;
-    }
-  >;
-  cheapestStore: StoreId | null;
-  cheapestTotal: number;
+  total: number;
+  matchedCount: number;
+  missingCount: number;
   ingredients: PricedIngredient[];
 }
 
@@ -82,15 +68,8 @@ export interface ShoppingListItem {
   totalQuantity: number;
   unit: string;
   recipeIds: string[];
-  byStore: Record<
-    StoreId,
-    {
-      product: StoreProduct | null;
-      packsNeeded: number;
-      lineTotal: number;
-      matched: boolean;
-    }
-  >;
-  cheapestStore: StoreId | null;
-  cheapestTotal: number;
+  product: StoreProduct | null;
+  packsNeeded: number;
+  lineTotal: number;
+  matched: boolean;
 }
