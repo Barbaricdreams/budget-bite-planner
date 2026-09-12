@@ -8,11 +8,75 @@ Plan thrifty meals and compare **DEMO / MOCK** grocery costs across **Dollar Tre
 
 ## Deploy (GitHub Pages)
 
-This app is a Next.js **static export** deployed with **GitHub Actions**.
+This app is a Next.js **static export** intended for **GitHub Actions → Pages**.
 
-1. Repo **Settings → Pages → Build and deployment → Source** must be **GitHub Actions** (one-time).
-2. Push to `main` (or run the **Deploy to GitHub Pages** workflow manually).
-3. Site URL: https://barbaricdreams.github.io/budget-bite-planner/
+### One-time GitHub setup
+
+1. **Add the workflow file** (required once if it is not already on `main`): create  
+   `.github/workflows/deploy-pages.yml` with the contents below (GitHub → Add file), then commit to `main`.
+2. **Settings → Pages → Build and deployment → Source** → **GitHub Actions**.
+3. Push to `main` (or run **Actions → Deploy to GitHub Pages → Run workflow**).
+4. Site URL: https://barbaricdreams.github.io/budget-bite-planner/
+
+<details>
+<summary>Workflow file: <code>.github/workflows/deploy-pages.yml</code></summary>
+
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static export
+        run: npm run build
+        env:
+          GITHUB_PAGES: "true"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+</details>
 
 Local `next dev` uses `/` (no `basePath`). The Pages workflow sets `GITHUB_PAGES=true` so production builds use `basePath` / `assetPrefix` `/budget-bite-planner`.
 
