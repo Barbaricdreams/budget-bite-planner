@@ -25,7 +25,7 @@ export default function HomePage() {
 
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 p-6 text-white shadow-lg sm:p-8">
+      <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 p-6 text-white shadow-lg sm:p-8 dark:from-emerald-800 dark:via-teal-800 dark:to-cyan-900">
         <p className="text-sm font-semibold uppercase tracking-widest text-emerald-100">
           Grocery planner
         </p>
@@ -45,12 +45,12 @@ export default function HomePage() {
           placeholder="Search recipes, tags…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm outline-none ring-emerald-500 focus:ring-2"
+          className="w-full flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none ring-emerald-500 focus:ring-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
         />
         <select
           value={tag}
           onChange={(e) => setTag(e.target.value)}
-          className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm outline-none ring-emerald-500 focus:ring-2 sm:w-56"
+          className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none ring-emerald-500 focus:ring-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 sm:w-56"
         >
           <option value="all">All tags</option>
           {tags.map((t) => (
@@ -61,7 +61,7 @@ export default function HomePage() {
         </select>
       </section>
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-500 dark:text-slate-400">
         Showing {filtered.length} of {RECIPES.length} meals
       </p>
 
@@ -72,7 +72,7 @@ export default function HomePage() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-400">
           No recipes match. Try another search or tag.
         </div>
       )}
