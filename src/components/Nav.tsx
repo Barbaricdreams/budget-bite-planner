@@ -10,18 +10,23 @@ const links = [
   { href: "/settings", label: "Settings" },
 ];
 
+function normalizePath(path: string) {
+  if (!path || path === "/") return "/";
+  return path.replace(/\/+$/, "") || "/";
+}
+
 export function Nav() {
-  const pathname = usePathname();
+  const pathname = normalizePath(usePathname() || "/");
   const { selectedRecipeIds, zip } = useApp();
 
   return (
     <header className="sticky top-0 z-40 border-b border-emerald-900/10 bg-white/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <Link href="/" className="group flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-lg shadow-sm">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
+        <Link href="/" className="group flex min-w-0 shrink items-center gap-2">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-lg shadow-sm">
             🥗
           </span>
-          <div className="leading-tight">
+          <div className="hidden leading-tight min-[380px]:block">
             <div className="text-sm font-bold tracking-tight text-slate-900 group-hover:text-emerald-700">
               Budget Bite Planner
             </div>
@@ -29,17 +34,18 @@ export function Nav() {
           </div>
         </Link>
 
-        <nav className="flex items-center gap-1 sm:gap-2">
+        <nav className="-mx-1 flex max-w-[70%] items-center gap-1 overflow-x-auto px-1 sm:max-w-none sm:gap-2">
           {links.map((l) => {
+            const href = normalizePath(l.href);
             const active =
-              l.href === "/"
+              href === "/"
                 ? pathname === "/"
-                : pathname.startsWith(l.href);
+                : pathname === href || pathname.startsWith(`${href}/`);
             return (
               <Link
                 key={l.href}
                 href={l.href}
-                className={`relative rounded-full px-3 py-1.5 text-sm font-medium transition ${
+                className={`relative whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-medium transition sm:px-3 sm:text-sm ${
                   active
                     ? "bg-emerald-600 text-white shadow-sm"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"

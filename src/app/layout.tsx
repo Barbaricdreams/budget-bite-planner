@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DemoBanner } from "@/components/DemoBanner";
 import { Nav } from "@/components/Nav";
 import { AppProvider } from "@/context/AppContext";
@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   title: "Budget Bite Planner",
   description:
     "Plan budget meals and compare DEMO grocery costs across Dollar Tree, Dollar General, and Walmart.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#059669",
 };
 
 export default function RootLayout({

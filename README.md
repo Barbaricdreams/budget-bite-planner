@@ -2,7 +2,26 @@
 
 Plan thrifty meals and compare **DEMO / MOCK** grocery costs across **Dollar Tree**, **Dollar General**, and **Walmart**.
 
+**Live site:** [https://barbaricdreams.github.io/budget-bite-planner/](https://barbaricdreams.github.io/budget-bite-planner/)
+
 > **Important:** Prices are fictional seeded data for UX demos. There are no official public consumer APIs for Dollar Tree / Dollar General. Nothing in this app hits live store endpoints.
+
+## Deploy (GitHub Pages)
+
+This app is a Next.js **static export** deployed with **GitHub Actions**.
+
+1. Repo **Settings → Pages → Build and deployment → Source** must be **GitHub Actions** (one-time).
+2. Push to `main` (or run the **Deploy to GitHub Pages** workflow manually).
+3. Site URL: https://barbaricdreams.github.io/budget-bite-planner/
+
+Local `next dev` uses `/` (no `basePath`). The Pages workflow sets `GITHUB_PAGES=true` so production builds use `basePath` / `assetPrefix` `/budget-bite-planner`.
+
+```bash
+# Optional: preview the Pages base path locally
+GITHUB_PAGES=true npm run build
+npx serve out
+# then open http://localhost:3000/budget-bite-planner/
+```
 
 ## Features
 
@@ -22,8 +41,7 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000).
 
 ```bash
-npm run build   # production build
-npm start       # serve production build
+npm run build   # static export → out/
 ```
 
 No API keys or secrets are required.
@@ -31,6 +49,7 @@ No API keys or secrets are required.
 ## Tech
 
 - Next.js (App Router) + TypeScript + Tailwind CSS
+- Static export for GitHub Pages (`output: "export"`, `trailingSlash: true`)
 - Client-side pricing against in-memory mock catalogs
 - Preferences (ZIP, shopping list) stored in `localStorage`
 
